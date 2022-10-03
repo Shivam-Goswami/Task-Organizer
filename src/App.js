@@ -1,23 +1,58 @@
-import logo from './logo.svg';
+import React,{useState, useEffect} from "react";
+import Header from './Component/Header';
+import Form from './Component/Form';
+import TasksList from './Component/TasksList';
 import './App.css';
 
-function App() {
+const App = () => {
+
+  const[input,setInput]=useState("");
+  const[tasks,setTasks]=useState([]);
+
+  const[time,setTime]=useState(0);
+  const[timerOn,setTimerOn]=useState(false);
+
+  useEffect(() => {
+    let interval = null;
+    if (timerOn) {
+      interval = setInterval(() => {
+        setTime(prevTime => prevTime+1)
+      },1000)
+    }
+    else {
+      clearInterval(interval);
+      setTime(0);
+    }
+    return () => clearInterval(interval)
+
+  },[timerOn]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <div className="app-wrapper">
+        <div>
+          <Header/>
+        </div>
+        <div>
+          <Form
+          input={input}
+          setInput={setInput}
+          tasks={tasks}
+          setTasks={setTasks}
+          time={time}
+          setTime={setTime}
+          timerOn={timerOn}
+          setTimerOn={setTimerOn}
+          />
+        </div>
+        <div>
+          <TasksList tasks={tasks}
+          setTasks={setTasks}
+          time={time} 
+          timerOn={timerOn}
+          setTimerOn={setTimerOn}
+          />
+        </div>
+      </div>      
     </div>
   );
 }
